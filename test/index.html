@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>d3 js</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <style>
+
+        body{
+            padding: 20px;
+        }
+
+        .chart{
+            box-shadow: #b7b5b5 0px 2px 10px;
+            padding:20px;
+            display: inline-block;
+        }
+
+        .chart.barra div{
+            font: 10px sans-serif;
+            background-color: steelblue;
+            text-align: right;
+            padding: 3px;
+            margin: 1px;
+            color: white;
+        }
+
+
+
+        .barrasvg rect {
+            fill: steelblue;
+        }
+
+        .barrasvg text {
+            fill: white;
+            font: 10px sans-serif;
+            text-anchor: end;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="chart barra"></div>
+<svg class="chart barrasvg"></svg>
+
+
+<script>
+
+    var data = [30, 86, 168, 281, 303, 365];
+
+    d3.select(".chart.barra")
+        .selectAll("div")
+        .data(data)
+        .enter()
+        .append("div")
+        .style("width", function(d) { return d + "px"; })
+        .text(function(d) { return d; });
+
+</script>
+<script>
+
+    var data = [4, 8, 15, 16, 23, 42];
+
+    var width = 420,
+        barHeight = 20;
+
+    var x = d3.scale.linear()
+        .domain([0, d3.max(data)])
+        .range([0, width]);
+
+    var chart = d3.select(".chart.barrasvg")
+        .attr("width", width)
+        .attr("height", barHeight * data.length);
+
+    var bar = chart.selectAll("g")
+        .data(data)
+        .enter().append("g")
+        .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+    bar.append("rect")
+        .attr("width", x)
+        .attr("height", barHeight - 1);
+
+    bar.append("text")
+        .attr("x", function(d) { return x(d) - 3; })
+        .attr("y", barHeight / 2)
+        .attr("dy", ".35em")
+        .text(function(d) { return d; });
+
+</script>
+</body>
+</html>

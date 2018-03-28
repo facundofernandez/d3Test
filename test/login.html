@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign in Google</title>
+    <meta name="google-signin-client_id"
+          content="382826956992-e5ht8gp883ov6pu4lm6778le9idhqnst.apps.googleusercontent.com">
+
+    <style type="text/css">
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        div {
+            margin: 20px;
+        }
+
+        #customBtn {
+            display: block;
+            background: #E25C50;
+            color: #444;
+
+            white-space: nowrap;
+        }
+
+        #customBtn:hover {
+            cursor: pointer;
+        }
+
+        span.buttonText {
+            display: block;
+            text-align: center;
+            margin: 18px auto;
+            cursor: pointer;
+            width: 88px;
+            color: white;
+            font-size: 16px;
+            display: none;
+            border: none;
+            display: inline-block;
+            letter-spacing: 0px;
+
+            transition: opacity .2s ease;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id="customBtn" class="customGPlusSignIn">
+    <span class="buttonText">Google</span>
+</div>
+
+<div>
+    <a href="#" onclick="signOut();">Sign out</a>
+</div>
+
+<script src="https://apis.google.com/js/api:client.js"></script>
+<script>
+
+
+    var googleUser = {};
+    var startApp = function () {
+        gapi.load('auth2', function () {
+
+            auth2 = gapi.auth2.init({
+                client_id: '382826956992-e5ht8gp883ov6pu4lm6778le9idhqnst.apps.googleusercontent.com'
+            });
+
+            attachSignin(document.getElementById('customBtn'));
+        });
+    };
+
+
+    function attachSignin(element) {
+
+        // Se asocia el click request
+        auth2.attachClickHandler(element, {}, // element es el boton
+
+            function (googleUser) {
+                var id_token = googleUser.getAuthResponse().id_token;
+                var profile = googleUser.getBasicProfile();
+                console.log('ID Token: ' + id_token); // Do not send to your backend! Use an ID token instead.
+                console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+                console.log('Name: ' + profile.getName());
+                console.log('Image URL: ' + profile.getImageUrl());
+                console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+            }, function (error) {
+                alert(JSON.stringify(error, undefined, 2));
+            });
+    }
+
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        console.log(auth2);
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+    }
+
+
+</script>
+<script>startApp();</script>
+</body>
+</html>
